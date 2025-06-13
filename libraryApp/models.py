@@ -1,9 +1,9 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 from decimal import Decimal
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser
 
 
 class Author(models.Model):
@@ -83,9 +83,7 @@ class BookCopy(models.Model):
         return f"{self.id} ({self.book.title})"
 
 
-class Member(models.Model):
-    """Library member; tied to Django’s built-in User for auth."""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class Member(AbstractUser):
 
     # Field to track manual or previously assessed penalties
     penalty_balance = models.DecimalField(
@@ -96,7 +94,7 @@ class Member(models.Model):
     )
 
     def __str__(self):
-        return f"{self.user.get_full_name() or self.user.username}"
+        return f"{self.get_full_name() or self.username}"
 
     @property
     def penalty(self) -> Decimal:
@@ -117,7 +115,7 @@ class Member(models.Model):
 class Loan(models.Model):
     """Record of a BookCopy loaned to a Member."""
     book_copy = models.ForeignKey(BookCopy, on_delete=models.PROTECT, related_name='loans')
-    member = models.ForeignKey(User, on_delete=models.PROTECT, related_name='loans')
+    member = models.ForeignKey(Member, on_delete=models.PROTECT, related_name='loans')
     loaned_on = models.DateTimeField(default=timezone.now)
     due_back = models.DateTimeField(help_text="When the copy should be returned")
     returned_on = models.DateTimeField(null=True, blank=True)
