@@ -1,5 +1,5 @@
-from ..models import Library, Author, BookCopy
-from . import BaseRepository
+from ..models import Library, Author, BookCopy, Category
+from .BaseRepository import BaseRepository
 
 
 class LibraryRepository(BaseRepository):
@@ -14,6 +14,7 @@ class LibraryRepository(BaseRepository):
             ).values_list('library', flat=True))
         return libraries
 
+
     # Example: Get latest products
-    def get_latest_(self, limit=10):
-        return self.model.objects.order_by('-created_at')[:limit]
+    # def get_latest_(self, limit=10):
+    #     return self.model.objects.order_by('-created_at')[:limit]

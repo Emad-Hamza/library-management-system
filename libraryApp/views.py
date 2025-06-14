@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from .models import Book, Library, Category, Author
 from django.template import loader
 from pprint import pprint
+from .repositories.LibraryRepository import LibraryRepository
 
 
 def index(request):
@@ -12,7 +13,14 @@ def index(request):
 
 
 def libraries(request):
-    all_libraries = Library.objects.all()
+    author_id = request.GET.get('author')
+    category_id = request.GET.get('category')
+    library_repository = LibraryRepository()
+    if author_id or category_id:
+        all_libraries = library_repository.filter_by_author(author_id)
+    else:
+        all_libraries = Library.objects.all()
+
     all_authors = Author.objects.all()
     all_categories = Category.objects.all()
     template = loader.get_template("libraryApp/libraries/index.html")
