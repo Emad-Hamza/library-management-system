@@ -1,0 +1,90 @@
+{% extends 'libraryApp/base.html' %}
+
+{% block content %}
+    <section id="featured-books" class="py-5 my-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="section-header align-center">
+                        <h2 class="section-title">Libraries</h2>
+                    </div>
+
+                    <form name="filter-form">
+                        <div class="row" id="filter-form">
+                            <div class="col-md-3">
+                                <label style="margin-right: 10px">
+                                    Filter by Author
+                                    <select name="author" class="form-control">
+                                        <option></option>
+                                        {% if authors %}
+                                            {% for author in authors %}
+                                                <option value="{{ author.id }}">{{ author }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="margin-right: 10px">
+                                    Filter by Book Category
+                                    <select name="category" class="form-control">
+                                        <option></option>
+                                        {% if categories %}
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}">{{ category }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="text-left">
+                                <a href="#"
+                                   class="btn btn-default mr-5">Reset
+                                    <i class="icon-reload-alt position-right"></i></a>
+                                <button type="submit" class="btn btn-primary mr-20">Filter <i
+                                        class="fa fa-search position-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="items-list" data-aos="fade-up">
+                        {% if libraries %}
+                            {% for library in libraries %}
+                                <div class="product-item">
+                                    <figure class="product-style">
+                                        <img src="images/product-item1.jpg" alt="Books" class="product-item">
+                                        <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+                                            Cart
+                                        </button>
+                                    </figure>
+                                    <figcaption>
+                                        <h3>{{ library.name }}</h3>
+                                        <span>{{ library.author }}</span>
+                                        <div class="item-price">Status: book.status</div>
+                                    </figcaption>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                    </div><!--ft-books-slider-->
+                </div><!--grid-->
+
+
+            </div><!--inner-content-->
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="btn-wrap align-right">
+                    <a href="#" class="btn-accent-arrow">View all products <i
+                            class="icon icon-ns-arrow-right"></i></a>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,4 +1,4 @@
-{{% extends 'libraryApp/base.html' %}
+{% extends 'libraryApp/base.html' %}
 
 {% block content %}
     <section id="featured-books" class="py-5 my-5">
@@ -7,12 +7,12 @@
                 <div class="col-md-12">
 
                     <div class="section-header align-center">
-                        <h2 class="section-title">Books</h2>
+                        <h2 class="section-title">Authors</h2>
                     </div>
 
                     <div class="items-list" data-aos="fade-up">
-                        {% if all_books %}
-                            {% for book in all_books %}
+                        {% if all_authors %}
+                            {% for author in all_authors %}
                                 <div class="product-item">
                                     <figure class="product-style">
                                         <img src="images/product-item1.jpg" alt="Books" class="product-item">
@@ -21,8 +21,8 @@
                                         </button>
                                     </figure>
                                     <figcaption>
-                                        <h3>{{ book.title }}</h3>
-                                        <span>{{ book.author }}</span>
+                                        <h3>{{ author.title }}</h3>
+                                        <span>{{ author.author }}</span>
                                         <div class="item-price">Status: book.status</div>
                                     </figcaption>
                                 </div>
