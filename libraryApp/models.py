@@ -39,27 +39,15 @@ class Category(models.Model):
 
 
 class Book(models.Model):
-    """A book (conceptual work, not a specific copy)."""
+    """A specific copy of a book"""
     title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     summary = models.TextField(help_text="Brief description of the book")
     isbn = models.CharField('ISBN', max_length=13, unique=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True)
+    imprint = models.CharField(max_length=200, help_text="Publisher imprint info")
     categories = models.ManyToManyField(Category, blank=True, related_name='books')
     language = models.CharField(max_length=100, blank=True, help_text="e.g. English, French")
-
-    class Meta:
-        ordering = ['title']
-
-    def __str__(self):
-        return self.title
-
-
-class BookCopy(models.Model):
-    """A specific physical copy of a book that can be borrowed."""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    book = models.ForeignKey(Book, on_delete=models.RESTRICT, related_name='copies')
-    imprint = models.CharField(max_length=200, help_text="Publisher imprint info")
     added_on = models.DateTimeField(auto_now_add=True)
 
     STATUS_CHOICES = [
@@ -68,6 +56,7 @@ class BookCopy(models.Model):
         ('r', 'Reserved'),
         ('m', 'Maintenance'),
     ]
+
     status = models.CharField(
         max_length=1,
         choices=STATUS_CHOICES,
@@ -77,14 +66,13 @@ class BookCopy(models.Model):
     )
 
     class Meta:
-        ordering = ['book__title', 'id']
+        ordering = ['title']
 
     def __str__(self):
-        return f"{self.id} ({self.book.title})"
+        return self.title
 
 
 class Member(AbstractUser):
-
     # Field to track manual or previously assessed penalties
     penalty_balance = models.DecimalField(
         max_digits=8,
@@ -113,16 +101,16 @@ class Member(AbstractUser):
 
 
 class Loan(models.Model):
-    """Record of a BookCopy loaned to a Member."""
-    book_copy = models.ForeignKey(BookCopy, on_delete=models.PROTECT, related_name='loans')
+    """Record of a Book loaned to a Member."""
+    book = models.ForeignKey(Book, on_delete=models.PROTECT, related_name='loans')
     member = models.ForeignKey(Member, on_delete=models.PROTECT, related_name='loans')
     loaned_on = models.DateTimeField(default=timezone.now)
-    due_back = models.DateTimeField(help_text="When the copy should be returned")
+    due_back = models.DateTimeField(help_text="When the book should be returned")
     returned_on = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ['due_back']
-        unique_together = [['book_copy', 'returned_on']]
+        unique_together = [['book', 'returned_on']]
 
     @property
     def is_overdue(self):
@@ -131,4 +119,4 @@ class Loan(models.Model):
         return False
 
     def __str__(self):
-        return f"{self.book_copy} loaned to {self.member}"
+        return f"{self.book} loaned to {self.member}"
