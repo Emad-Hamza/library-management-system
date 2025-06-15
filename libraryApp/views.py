@@ -16,10 +16,7 @@ def libraries(request):
     author_id = request.GET.get('author')
     category_id = request.GET.get('category')
     library_repository = LibraryRepository()
-    if author_id or category_id:
-        all_libraries = library_repository.filter_by_author(author_id)
-    else:
-        all_libraries = Library.objects.all()
+    all_libraries = library_repository.filter(author_id, category_id)
 
     all_authors = Author.objects.all()
     all_categories = Category.objects.all()
