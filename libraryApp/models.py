@@ -5,6 +5,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
+
 class Library(models.Model):
     name = models.CharField(max_length=150)
     location = models.TextField()
@@ -64,6 +65,13 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+    def getCategories(self):
+        output = ""
+        for category in self.categories.all():
+            output = output + category.name + ","
+
+        return output[:-1]
+
 
 class BookCopy(models.Model):
     """A specific physical copy of a book that can be borrowed."""
@@ -94,7 +102,6 @@ class BookCopy(models.Model):
 
 
 class Member(AbstractUser):
-
     # Field to track manual or previously assessed penalties
     penalty_balance = models.DecimalField(
         max_digits=8,

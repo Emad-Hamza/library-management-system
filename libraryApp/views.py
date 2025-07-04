@@ -4,6 +4,7 @@ from django.template import loader
 from pprint import pprint
 
 from .repositories.AuthorRepository import AuthorRepository
+from .repositories.BookRepository import BookRepository
 from .repositories.LibraryRepository import LibraryRepository
 
 
@@ -42,9 +43,18 @@ def authors(request):
 
 
 def books(request):
-    all_books = Book.objects.all()
+    library_id = request.GET.get('library')
+    category_id = request.GET.get('category')
+    author_id = request.GET.get('author')
+
+    all_authors = Author.objects.all()
+    all_libraries = Library.objects.all()
+    all_categories = Category.objects.all()
+
+    book_repository = BookRepository()
+    filtered_books = book_repository.filter(author_id, category_id, library_id)
     template = loader.get_template("libraryApp/books/index.html")
-    context = {"books": all_books}
+    context = {"books": filtered_books, "libraries": all_libraries, "categories": all_categories, "authors": all_authors}
     return HttpResponse(template.render(context, request))
 
 

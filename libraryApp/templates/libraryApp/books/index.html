@@ -10,9 +10,61 @@
                         <h2 class="section-title">Books</h2>
                     </div>
 
+                    <form name="filter-form">
+                        <div class="row" id="filter-form">
+                            <div class="col-md-3">
+                                <label style="margin-right: 10px">
+                                    Filter by Author
+                                    <select name="author" class="form-control">
+                                        <option></option>
+                                        {% if authors %}
+                                            {% for author in authors %}
+                                                <option value="{{ author.id }}">{{ author }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="margin-right: 10px">
+                                    Filter by Book Category
+                                    <select name="category" class="form-control">
+                                        <option></option>
+                                        {% if categories %}
+                                            {% for category in categories %}
+                                                <option value="{{ category.id }}">{{ category }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="col-md-3">
+                                <label style="margin-right: 10px">
+                                    Filter by Library
+                                    <select name="library" class="form-control">
+                                        <option></option>
+                                        {% if libraries %}
+                                            {% for library in libraries %}
+                                                <option value="{{ library.id }}">{{ library }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="text-left">
+                                <a href="#"
+                                   class="btn btn-default mr-5">Reset
+                                    <i class="icon-reload-alt position-right"></i></a>
+                                <button type="submit" class="btn btn-primary mr-20">Filter <i
+                                        class="fa fa-search position-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
                     <div class="items-list" data-aos="fade-up">
-                        {% if all_books %}
-                            {% for book in all_books %}
+                        {% if books %}
+                            {% for book in books %}
                                 <div class="product-item">
                                     <figure class="product-style">
                                         <img src="images/product-item1.jpg" alt="Books" class="product-item">
@@ -23,7 +75,7 @@
                                     <figcaption>
                                         <h3>{{ book.title }}</h3>
                                         <span>{{ book.author }}</span>
-                                        <div class="item-price">Status: book.status</div>
+                                        <div class="item-price">Categories: {{ book.getCategories }}</div>
                                     </figcaption>
                                 </div>
                             {% endfor %}
@@ -48,4 +100,21 @@
         </div>
         </div>
     </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            let urlParams = new URLSearchParams(window.location.search);
+            let library = urlParams.get('library');
+            let category = urlParams.get('category');
+            let author = urlParams.get('author');
+
+            $("form[name='filter-form'] select[name='library']").val(library);
+            $("form[name='filter-form'] select[name='category']").val(category);
+            $("form[name='filter-form'] select[name='author']").val(author);
+
+        })
+    </script>
 {% endblock %}
