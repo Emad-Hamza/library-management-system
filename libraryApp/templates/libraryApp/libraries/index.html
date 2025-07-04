@@ -88,3 +88,16 @@
         </div>
     </section>
 {% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            let urlParams = new URLSearchParams(window.location.search);
+            let library = urlParams.get('author');
+            let category = urlParams.get('category');
+            $("form[name='filter-form'] select[name='author']").val(library);
+            $("form[name='filter-form'] select[name='category']").val(category);
+        })
+    </script>
+{% endblock %}
