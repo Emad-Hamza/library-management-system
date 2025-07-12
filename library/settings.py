@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "slippers",
     'django.contrib.staticfiles',
     "debug_toolbar",
+    "django_dump_die"
 ]
 
 MIDDLEWARE = [
@@ -60,6 +61,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "django_dump_die.middleware.DumpAndDieMiddleware",
 ]
 
 ROOT_URLCONF = 'library.urls'
